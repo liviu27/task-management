@@ -1,0 +1,32 @@
+Proiect Task management
+
+
+I. Management Useri
+
+1. Login
+    1. username
+    2. parola
+2. Creare cont
+    1. Username
+    2. Parola
+    3. Nume + Prenume
+    4. email
+3. Logout
+4. Creare proiect: Calcul Armatura
+5. Creare Categorii taskuri
+6. Creare Taskuri
+    1. nume task
+    2. timp estimat
+    3. timp logat
+    4. persoana asignata
+    5. comentarii la task
+        1. Comentariu text
+        2. user care comenteaza
+    6. categoria din care face parte acest task
+7. Listare proiecte
+8. listare taskuri pe cateogrii
+9. Lucreaza in Proeiectul 1
+10. logare timp pe task 1. 1h
+11. descriere task - comentarii si tot
+12. Mutarea taskului dintr-o categorie in alta
+13. Stergere task

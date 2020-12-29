@@ -17,7 +17,7 @@ public class Account {
     @Override
     public String toString() {
         return "Account " + id +
-                "[name: " + name +
+                " [name: " + name +
                 ", username: " + username +
                 ", email: " + email +
                 ']';

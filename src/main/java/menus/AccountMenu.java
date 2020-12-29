@@ -1,5 +1,6 @@
 package menus;
 
+import encryption.AesGcmEncryptor;
 import exceptions.business.CurrentUserNotAdminException;
 import models.Account;
 
@@ -43,7 +44,7 @@ public class AccountMenu implements IMenu {
                 case INT_3 -> updatePassword(scanner);
                 case INT_4 -> listAllAccounts(scanner);
 //                case INT_5 -> listAllAccountsByProject(scanner);
-//                case INT_6 -> deleteAccount(scanner);
+                case INT_6 -> deleteAccount(scanner);
                 case INT_0 -> MainMenu.getInstance().displayMenu(scanner);
                 default -> System.out.println(INVALID_OPTION);
             }
@@ -55,26 +56,45 @@ public class AccountMenu implements IMenu {
     }
 
     private void updateAccount(Scanner scanner) {
-        /* TODO
-        1. check for loggedAccount (from repo)
-        2. print information for logged in account
-        3. can be an utility method (used for admin and normal account)
-         */
+        System.out.println("Enter new information:");
+        scanner.nextLine();
+        System.out.print("Name: ");
+        String updatedName = scanner.nextLine();
+        System.out.print("e-mail: ");
+        String updatedEmail = scanner.nextLine();
+        ACCOUNT_SERVICE.updateAccountInformation(updatedName, updatedEmail);
     }
 
     private void updatePassword(Scanner scanner) {
-        /* TODO
-        1. check for loggedAccount (from repo)
-        2. print information for logged in account
-        3. can be an utility method (used for admin and normal account)
-         */
+        scanner.nextLine();
+        System.out.print("Enter new password:");
+        String newPassword = scanner.nextLine();
+        ACCOUNT_SERVICE.updateAccountPassword(newPassword);
     }
 
     private void listAllAccounts(Scanner scanner) {
         Account loggedAccount = ACCOUNT_REPOSITORY.getCurrentLoggedAccount();
-        if(loggedAccount.getType().equals("admin")) {
+        if (loggedAccount.getType().equals("admin")) {
             List<Account> accounts = ACCOUNT_SERVICE.listAllAccounts();
             accounts.forEach(System.out::println);
+        } else {
+            throw new CurrentUserNotAdminException(loggedAccount.getUsername());
+        }
+    }
+
+    private void deleteAccount(Scanner scanner) {
+        Account loggedAccount = ACCOUNT_REPOSITORY.getCurrentLoggedAccount();
+        if (loggedAccount.getType().equals("admin")) {
+            scanner.nextLine();
+            System.out.print("Enter account username: ");
+            String username = scanner.nextLine();
+            System.out.println("Are you sure? (yes/no)");
+            String answer = scanner.nextLine();
+            if (answer.equals("yes")) {
+                ACCOUNT_SERVICE.deleteAccount(username);
+            } else {
+                displayMenu(scanner);
+            }
         } else {
             throw new CurrentUserNotAdminException(loggedAccount.getUsername());
         }

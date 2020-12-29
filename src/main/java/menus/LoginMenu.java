@@ -1,9 +1,9 @@
 package menus;
 
-import java.util.Locale;
+import encryption.AesGcmEncryptor;
+
 import java.util.Scanner;
 
-import static repo.AccountRepository.ACCOUNT_REPOSITORY;
 import static service.AccountService.ACCOUNT_SERVICE;
 
 public class LoginMenu implements IMenu {
@@ -40,19 +40,13 @@ public class LoginMenu implements IMenu {
     }
 
     private void login(Scanner scanner) {
-        /*
-        1. check for username - OK
-        2. check password with DB (AES encryption) - TODO
-        3. store username for future reference - OK
-        4. if passed, show main menu - OK
-         */
         scanner.nextLine();
         System.out.print("Username: ");
         String username = scanner.nextLine().toLowerCase().strip();
         System.out.print("Password: ");
         String password = scanner.nextLine();
         boolean loginPassed = ACCOUNT_SERVICE.loginPassed(username, password);
-        if (loginPassed == true) {
+        if (loginPassed) {
             MainMenu.getInstance().displayMenu(scanner);
         } else {
             System.out.println("Incorrect username or password. Try again! ");
@@ -67,13 +61,12 @@ public class LoginMenu implements IMenu {
         String username = scanner.nextLine().toLowerCase().strip();
         System.out.print("Password: ");
         String password = scanner.nextLine();
-        // password encryption TODO
         System.out.print("Name: ");
         String name = scanner.nextLine();
         System.out.print("email: ");
         String email = scanner.nextLine();
-        ACCOUNT_SERVICE.createAccount(username, password, name, email);
 
+        ACCOUNT_SERVICE.createAccount(username, password, name, email);
     }
 
     private void closeApp() {

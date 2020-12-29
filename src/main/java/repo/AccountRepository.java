@@ -17,6 +17,9 @@ public enum AccountRepository {
     private static final String LIST_ACCOUNTS = "SELECT * FROM accounts";
     private static final String LIST_ACCOUNT_INFO = "SELECT * FROM accounts WHERE username= ?";
     private static final String LOGIN = "SELECT * FROM accounts WHERE username= ? AND password = ?";
+    private static final String UPDATE_ACCOUNT_INFO = "UPDATE accounts SET name = ?, email = ? WHERE username = ?";
+    private static final String UPDATE_PASSWORD = "UPDATE accounts SET password = ? WHERE username = ?";
+    private static final String DELETE_ACCOUNT = "DELETE FROM accounts WHERE username = ?";
 
     public void createAccount(Connection connection, Account account) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ACCOUNT)) {
@@ -28,7 +31,7 @@ public enum AccountRepository {
         }
     }
 
-    public boolean loginPassed (Connection connection, String username, String password) throws SQLException {
+    public boolean loginPassed(Connection connection, String username, String password) throws SQLException {
         boolean loginPassed = false;
         try (PreparedStatement preparedStatement = connection.prepareStatement(LOGIN)) {
             preparedStatement.setString(1, username);
@@ -42,7 +45,7 @@ public enum AccountRepository {
         return loginPassed;
     }
 
-    public List<Account> listAllAccounts (Connection connection) throws SQLException {
+    public List<Account> listAllAccounts(Connection connection) throws SQLException {
         List<Account> accounts = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
             final ResultSet resultSet = statement.executeQuery(LIST_ACCOUNTS);
@@ -65,22 +68,34 @@ public enum AccountRepository {
         return account;
     }
 
-    public void updateAccountInformation(Connection connection, String name, String email) {
-
+    public void updateAccountInformation(Connection connection, String name, String email) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCOUNT_INFO)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, getCurrentLoggedAccount().getUsername());
+            preparedStatement.executeUpdate();
+        }
     }
 
-    public void updateAccountPassword(Connection connection, String newPassword) {
-
+    public void updateAccountPassword(Connection connection, String newPassword) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PASSWORD)) {
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setString(2, getCurrentLoggedAccount().getUsername());
+            preparedStatement.executeUpdate();
+        }
     }
 
-    public void setCurrentLoggedAccount(Account account) {
-        currentLoggedAccount = account;
+    public void deleteAccount(Connection connection, String username) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ACCOUNT)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.executeUpdate();
+        }
     }
+
 
     public Account getCurrentLoggedAccount() {
         return currentLoggedAccount;
     }
-
 
     private Account mapRowToAccount(ResultSet resultSet) throws SQLException {
         final int accountID = resultSet.getInt(1);

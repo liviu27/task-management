@@ -5,7 +5,6 @@ import models.Account;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static database.MySQLConnection.DATA_SOURCE;
@@ -21,15 +20,15 @@ public enum AccountService {
                 .name(name)
                 .email(email)
                 .build();
-        try(Connection connection = DATA_SOURCE.getConnection()) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
             ACCOUNT_REPOSITORY.createAccount(connection, account);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
     }
 
-    public boolean loginPassed (String username, String password) {
-        try(Connection connection = DATA_SOURCE.getConnection()) {
+    public boolean loginPassed(String username, String password) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
             return ACCOUNT_REPOSITORY.loginPassed(connection, username, password);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
@@ -38,7 +37,7 @@ public enum AccountService {
 
     public List<Account> listAllAccounts() {
         List<Account> accounts;
-        try (Connection connection = DATA_SOURCE.getConnection()){
+        try (Connection connection = DATA_SOURCE.getConnection()) {
             accounts = ACCOUNT_REPOSITORY.listAllAccounts(connection);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are connected to database!");
@@ -47,13 +46,34 @@ public enum AccountService {
     }
 
     public Account listAccountInformation() {
-        try (Connection connection = DATA_SOURCE.getConnection()){
+        try (Connection connection = DATA_SOURCE.getConnection()) {
             return ACCOUNT_REPOSITORY.listAccountInformation(connection);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
         }
     }
 
+    public void updateAccountInformation(String name, String email) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            ACCOUNT_REPOSITORY.updateAccountInformation(connection, name, email);
+        } catch (SQLException exception) {
+            throw new DatabaseConnectionException("Check that you are able to connect to database");
+        }
+    }
 
+    public void updateAccountPassword(String newPassword) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            ACCOUNT_REPOSITORY.updateAccountPassword(connection, newPassword);
+        } catch (SQLException exception) {
+            throw new DatabaseConnectionException("Check that you are able to connect to database");
+        }
+    }
 
+    public void deleteAccount(String username) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            ACCOUNT_REPOSITORY.deleteAccount(connection, username);
+        } catch (SQLException exception) {
+            throw new DatabaseConnectionException("Check that you are able to connect to database");
+        }
+    }
 }

@@ -19,11 +19,11 @@ public enum ProjectRepository {
     private static final String LIST_PROJECTS_BY_VALUE = "SELECT * FROM projects WHERE budget BETWEEN ? AND ?";
 
     public void createProject(Connection connection, Project project) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement(CREATE_PROJECT)) {
-            ps.setString(1, project.getName());
-            ps.setDouble(2, project.getBudget());
-            ps.setString(3, project.getCurrency());
-            ps.executeUpdate();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PROJECT)) {
+            preparedStatement.setString(1, project.getName());
+            preparedStatement.setDouble(2, project.getBudget());
+            preparedStatement.setString(3, project.getCurrency());
+            preparedStatement.executeUpdate();
         }
 
     }

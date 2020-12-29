@@ -16,7 +16,11 @@ public enum ProjectService {
     PROJECT_SERVICE;
 
     public void createProject(String projectName, Double budget, String currency) {
-        Project project = Project.builder().name(projectName).budget(budget).currency(currency).build();
+        Project project = Project.builder()
+                .name(projectName)
+                .budget(budget)
+                .currency(currency)
+                .build();
         try (Connection connection = DATA_SOURCE.getConnection()) {
             PROJECT_REPOSITORY.createProject(connection, project);
 
@@ -26,11 +30,11 @@ public enum ProjectService {
     }
 
     public List<Project> listAllProjects() {
-        List<Project> allProjects = new ArrayList<>();
+        List<Project> allProjects;
         try (Connection connection = DATA_SOURCE.getConnection()) {
             allProjects = PROJECT_REPOSITORY.listAllProjects(connection);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            throw new DatabaseConnectionException("Check that you are able to connect to database");
         }
         return allProjects;
     }

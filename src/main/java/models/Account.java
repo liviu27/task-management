@@ -12,6 +12,15 @@ public class Account {
     private String password;
     private String name;
     private String email;
+    private String type;
 
+    @Override
+    public String toString() {
+        return "Account " + id +
+                "[name: " + name +
+                ", username: " + username +
+                ", email: " + email +
+                ']';
+    }
 
 }

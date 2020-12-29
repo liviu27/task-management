@@ -10,7 +10,7 @@ import static service.ProjectService.PROJECT_SERVICE;
 public class ProjectMenu implements IMenu {
 
     private static ProjectMenu instance = null;
-    private static final String PROJECT_MENU_TITLE = "\n---/ Project Menu '\'---";
+    private static final String PROJECT_MENU_TITLE = "\n---/ Project Menu \\---";
     private static final String PROJECT_MENU_OPTIONS
             = "\n1. Create new project"
             + "\n2. List all projects"
@@ -37,13 +37,13 @@ public class ProjectMenu implements IMenu {
             System.out.println(PROJECT_MENU_OPTIONS);
             option = scanner.nextInt();
             switch (option) {
-                case 1 -> createProject(scanner);
-                case 2 -> listProjects();
-                case 3 -> listProjectByID(scanner);
-                case 4 -> listProjectsByName(scanner);
-                case 5 -> listProjectsByValue(scanner);
-                case 6 -> deleteProject(scanner);
-                case 0 -> MainMenu.getInstance().displayMenu(scanner);
+                case INT_1 -> createProject(scanner);
+                case INT_2 -> listProjects();
+                case INT_3 -> listProjectByID(scanner);
+                case INT_4 -> listProjectsByName(scanner);
+                case INT_5 -> listProjectsByValue(scanner);
+                case INT_6 -> deleteProject(scanner);
+                case INT_0 -> MainMenu.getInstance().displayMenu(scanner);
                 default -> System.out.println(INVALID_OPTION);
             }
         } while (true);

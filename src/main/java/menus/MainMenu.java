@@ -2,6 +2,8 @@ package menus;
 
 import java.util.Scanner;
 
+import static repo.AccountRepository.ACCOUNT_REPOSITORY;
+
 public class MainMenu implements IMenu {
 
     private static MainMenu instance = null;
@@ -10,7 +12,8 @@ public class MainMenu implements IMenu {
     private static final String MAIN_MENU_OPTIONS = "1. Account information" +
             "\n2. Projects" +
             "\n3. Tasks" +
-            "\n4. Log out";
+            "\n---------------" +
+            "\n0. Log out";
 
 
     public static MainMenu getInstance() {
@@ -29,21 +32,17 @@ public class MainMenu implements IMenu {
             System.out.println(MAIN_MENU_OPTIONS);
             option = scanner.nextInt();
             switch (option) {
-                case 1 -> AccountMenu.getInstance().displayMenu(scanner);
-                case 2 -> ProjectMenu.getInstance().displayMenu(scanner);
-                case 3 -> TaskMenu.getInstance().displayMenu(scanner);
-                case 4 -> logOut();
+                case INT_1 -> AccountMenu.getInstance().displayMenu(scanner);
+                case INT_2 -> ProjectMenu.getInstance().displayMenu(scanner);
+                case INT_3 -> TaskMenu.getInstance().displayMenu(scanner);
+                case INT_0 -> logOut(scanner);
                 default -> System.out.println(INVALID_OPTION);
             }
         } while (true);
     }
 
-    private void logOut() {
-        /* TODO
-        1. check account type
-        2. update isAdmin
-        3. return to log in menu
-         */
-
+    private void logOut(Scanner scanner) {
+//        ACCOUNT_REPOSITORY.setCurrentLoggedAccount("");
+        LoginMenu.getInstance().displayMenu(scanner);
     }
 }

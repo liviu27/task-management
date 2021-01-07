@@ -6,7 +6,6 @@ import models.Project;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static database.MySQLConnection.DATA_SOURCE;
@@ -23,51 +22,49 @@ public enum ProjectService {
                 .build();
         try (Connection connection = DATA_SOURCE.getConnection()) {
             PROJECT_REPOSITORY.createProject(connection, project);
-
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
     }
 
-    public List<Project> listAllProjects() {
+    public List<Project> getAllProjects() {
         List<Project> allProjects;
         try (Connection connection = DATA_SOURCE.getConnection()) {
-            allProjects = PROJECT_REPOSITORY.listAllProjects(connection);
+            allProjects = PROJECT_REPOSITORY.getAllProjects(connection);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
         }
         return allProjects;
     }
 
-    public Project findProjectByID(int id) {
+    public Project getProjectByID(int id) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
-            return PROJECT_REPOSITORY.findProjectByID(connection, id)
+            return PROJECT_REPOSITORY.getProjectByID(connection, id)
                     .orElseThrow(() -> new ProjectNotFoundException(id));
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
         }
     }
 
-    public List<Project> findProjectsByName(String projectName) {
+    public List<Project> getProjectsByName(String projectName) {
         List<Project> projects;
         try (Connection connection = DATA_SOURCE.getConnection()) {
-            projects = PROJECT_REPOSITORY.findProjectsByName(connection, projectName);
+            projects = PROJECT_REPOSITORY.getProjectsByName(connection, projectName);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
         }
         return projects;
     }
 
-    public List<Project> findProjectsByValue(double minValue, double maxValue) {
+    public List<Project> getProjectsWithinBudgetRange(double minValue, double maxValue) {
         List<Project> projects;
         try (Connection connection = DATA_SOURCE.getConnection()){
-            projects = PROJECT_REPOSITORY.findProjectsByValue(connection, minValue, maxValue);
+            projects = PROJECT_REPOSITORY.getProjectsWithinBudgetRange(connection, minValue, maxValue);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
         }
         return projects;
     }
-
 
     public void deleteProjectByID(int id) {
         try (Connection connection = DATA_SOURCE.getConnection()) {

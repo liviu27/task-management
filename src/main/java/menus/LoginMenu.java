@@ -1,7 +1,8 @@
 package menus;
 
-import encryption.AesGcmEncryptor;
+import exceptions.business.WrongCredentialsException;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import static service.AccountService.ACCOUNT_SERVICE;
@@ -40,19 +41,20 @@ public class LoginMenu implements IMenu {
     }
 
     private void login(Scanner scanner) {
+        System.out.println("Type your credentials:");
         scanner.nextLine();
         System.out.print("Username: ");
         String username = scanner.nextLine().toLowerCase().strip();
         System.out.print("Password: ");
         String password = scanner.nextLine();
-        boolean loginPassed = ACCOUNT_SERVICE.loginPassed(username, password);
-        if (loginPassed) {
+        try {
+            ACCOUNT_SERVICE.login(username, password);
             MainMenu.getInstance().displayMenu(scanner);
-        } else {
-            System.out.println("Incorrect username or password. Try again! ");
+        } catch (WrongCredentialsException ex) {
+            System.out.println(ex.getMessage());
+            displayMenu(scanner);
         }
     }
-
 
     private void createNewUserAccount(Scanner scanner) {
         System.out.println("Insert information for the new account: ");

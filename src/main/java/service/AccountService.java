@@ -1,11 +1,14 @@
 package service;
 
+import exceptions.business.WrongCredentialsException;
 import exceptions.technical.DatabaseConnectionException;
 import models.Account;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static database.MySQLConnection.DATA_SOURCE;
 import static repo.AccountRepository.ACCOUNT_REPOSITORY;
@@ -13,9 +16,15 @@ import static repo.AccountRepository.ACCOUNT_REPOSITORY;
 public enum AccountService {
     ACCOUNT_SERVICE;
 
-    public void createAccount(String usename, String password, String name, String email) {
+    private Account currentLoggedAccount;
+
+    public Account getCurrentLoggedAccount() {
+        return currentLoggedAccount;
+    }
+
+    public void createAccount(String username, String password, String name, String email) {
         Account account = Account.builder()
-                .username(usename)
+                .username(username)
                 .password(password)
                 .name(name)
                 .email(email)
@@ -27,15 +36,18 @@ public enum AccountService {
         }
     }
 
-    public boolean loginPassed(String username, String password) {
+    public void login(String username, String password) throws WrongCredentialsException {
         try (Connection connection = DATA_SOURCE.getConnection()) {
-            return ACCOUNT_REPOSITORY.loginPassed(connection, username, password);
+            final Optional<Account> optionalAccount = ACCOUNT_REPOSITORY.getVerifiedAccount(connection, username, password);
+            currentLoggedAccount = optionalAccount.orElseThrow();
         } catch (SQLException exception) {
             throw new DatabaseConnectionException("Check that you are able to connect to database");
+        } catch (NoSuchElementException exception) {
+            throw new WrongCredentialsException();
         }
     }
 
-    public List<Account> listAllAccounts() {
+    public List<Account> getAllAccounts() {
         List<Account> accounts;
         try (Connection connection = DATA_SOURCE.getConnection()) {
             accounts = ACCOUNT_REPOSITORY.listAllAccounts(connection);
@@ -45,7 +57,7 @@ public enum AccountService {
         return accounts;
     }
 
-    public Account listAccountInformation() {
+    public Account getAccountInformation() {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             return ACCOUNT_REPOSITORY.listAccountInformation(connection);
         } catch (SQLException exception) {

@@ -21,7 +21,7 @@ public class ProjectMenu implements IMenu {
             + "\n0. Return to Main Menu";
 
     //Thread safe singleton - double-checked locking implementation
-    private volatile static ProjectMenu instance = null;
+    private volatile static ProjectMenu instance;
     public static ProjectMenu getInstance() {
         if (instance == null) {
             synchronized (ProjectMenu.class) {

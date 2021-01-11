@@ -5,7 +5,6 @@ import models.Account;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static service.AccountService.ACCOUNT_SERVICE;

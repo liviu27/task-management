@@ -2,7 +2,6 @@ package menus;
 
 import exceptions.business.WrongCredentialsException;
 
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import static service.AccountService.ACCOUNT_SERVICE;
@@ -48,7 +47,7 @@ public class LoginMenu implements IMenu {
         System.out.print("Password: ");
         String password = scanner.nextLine();
         try {
-            ACCOUNT_SERVICE.login(username, password);
+            ACCOUNT_SERVICE.getVerifiedAccount(username, password);
             MainMenu.getInstance().displayMenu(scanner);
         } catch (WrongCredentialsException ex) {
             System.out.println(ex.getMessage());

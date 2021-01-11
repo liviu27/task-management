@@ -1,5 +1,6 @@
 package menus;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public interface IMenu {
@@ -20,6 +21,6 @@ public interface IMenu {
     String EXIT = "Closing Application...";
 
 
-    void displayMenu(Scanner scanner);
+    void displayMenu(Scanner scanner) throws SQLException;
 
 }

@@ -76,7 +76,7 @@ public enum ProjectRepository {
         }
     }
 
-    public void deleteProjectByID(Connection connection, int id) throws SQLException {
+    public void deleteProjectById(Connection connection, int id) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PROJECT_BY_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

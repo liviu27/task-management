@@ -36,12 +36,12 @@ public enum AccountService {
         }
     }
 
-    public void login(String username, String password) throws WrongCredentialsException {
+    public void getVerifiedAccount(String username, String password) throws WrongCredentialsException {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             final Optional<Account> optionalAccount = ACCOUNT_REPOSITORY.getVerifiedAccount(connection, username, password);
             currentLoggedAccount = optionalAccount.orElseThrow();
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         } catch (NoSuchElementException exception) {
             throw new WrongCredentialsException();
         }
@@ -52,7 +52,7 @@ public enum AccountService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             accounts = ACCOUNT_REPOSITORY.listAllAccounts(connection);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are connected to database!");
+            throw new DatabaseConnectionException();
         }
         return accounts;
     }
@@ -61,7 +61,7 @@ public enum AccountService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             return ACCOUNT_REPOSITORY.listAccountInformation(connection);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
     }
 
@@ -69,7 +69,7 @@ public enum AccountService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             ACCOUNT_REPOSITORY.updateAccountInformation(connection, name, email);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
     }
 
@@ -77,7 +77,7 @@ public enum AccountService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             ACCOUNT_REPOSITORY.updateAccountPassword(connection, newPassword);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
     }
 
@@ -85,7 +85,7 @@ public enum AccountService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             ACCOUNT_REPOSITORY.deleteAccount(connection, username);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
     }
 }

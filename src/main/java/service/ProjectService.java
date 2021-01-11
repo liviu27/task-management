@@ -32,7 +32,7 @@ public enum ProjectService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             allProjects = PROJECT_REPOSITORY.getAllProjects(connection);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
         return allProjects;
     }
@@ -42,7 +42,7 @@ public enum ProjectService {
             return PROJECT_REPOSITORY.getProjectByID(connection, id)
                     .orElseThrow(() -> new ProjectNotFoundException(id));
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
     }
 
@@ -51,7 +51,7 @@ public enum ProjectService {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             projects = PROJECT_REPOSITORY.getProjectsByName(connection, projectName);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
         return projects;
     }
@@ -61,16 +61,16 @@ public enum ProjectService {
         try (Connection connection = DATA_SOURCE.getConnection()){
             projects = PROJECT_REPOSITORY.getProjectsWithinBudgetRange(connection, minValue, maxValue);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
         return projects;
     }
 
     public void deleteProjectByID(int id) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
-            PROJECT_REPOSITORY.deleteProjectByID(connection, id);
+            PROJECT_REPOSITORY.deleteProjectById(connection, id);
         } catch (SQLException exception) {
-            throw new DatabaseConnectionException("Check that you are able to connect to database");
+            throw new DatabaseConnectionException();
         }
     }
 }

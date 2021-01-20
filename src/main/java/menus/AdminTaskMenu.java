@@ -1,8 +1,10 @@
 package menus;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import models.Account;
 import models.Project;
 import models.Task;
+import models.TaskCategory;
 
 import java.util.List;
 import java.util.Scanner;
@@ -53,10 +55,10 @@ public class AdminTaskMenu implements IMenu {
                 case INT_1 -> createTask(scanner);
                 case INT_2 -> assignTask(scanner);
                 case INT_3 -> listAllTasks();
-//                case INT_4 -> listInReviewTasks(scanner);
+                case INT_4 -> listInReviewTasks(scanner);
                 case INT_5 -> listAllTasksByProject(scanner);
 //                case INT_6 -> listAllTasksByCategory(scanner);
-//                case INT_7 -> updateTaskDescription(scanner);
+                case INT_7 -> updateTaskDescription(scanner);
 //                case INT_8 -> updateTaskStatus(scanner);
                 case INT_9 -> deleteTask(scanner);
                 case INT_0 -> MainMenu.getInstance().displayMenu(scanner);
@@ -65,21 +67,46 @@ public class AdminTaskMenu implements IMenu {
         } while (true);
     }
 
+    private void listInReviewTasks(Scanner scanner) {
+        System.out.println("All IN_REVIEW tasks: ");
+        final List<Task> allInReviewTasks = TASK_SERVICE.gelAllInReviewTasks();
+        if (allInReviewTasks.isEmpty()) {
+            System.out.println("No IN_REVIEW tasks, be patient!");
+        } else {
+            allInReviewTasks.forEach(System.out::println);
+        }
+    }
+
     private void createTask(Scanner scanner) {
         System.out.println("Enter task information:");
         scanner.nextLine();
+
         System.out.print("Title: ");
         String taskTitle = scanner.nextLine();
+
         System.out.print("Description: ");
         String taskDescription = scanner.nextLine();
-        System.out.println("Assign task to project: ");
 
+        TaskCategory taskCategory = null;
+        boolean isGoodCategory = false;
+        while (!isGoodCategory) {
+            System.out.println("Choose category: ADMINISTRATIVE, TECHNICAL, FINANCIAL, BUSINESS, OTHER:");
+            final String userInput = scanner.next();
+            try {
+                taskCategory = TaskCategory.valueOf(userInput.toUpperCase());
+                isGoodCategory = true;
+            } catch (IllegalArgumentException exception) {
+                System.out.println("No such category. Returning to Task Menu");
+            }
+        }
+
+        System.out.println("Assign task to project: ");
         List<Project> allProjects = PROJECT_SERVICE.getAllProjects();
         allProjects.forEach(System.out::println);
         System.out.print("Select project from above list by ID: ");
         int projectId = scanner.nextInt();
 
-        TASK_SERVICE.createTask(taskTitle, taskDescription, projectId);
+        TASK_SERVICE.createTask(taskTitle, taskDescription, taskCategory, projectId);
     }
 
     private void assignTask(Scanner scanner) {
@@ -105,10 +132,10 @@ public class AdminTaskMenu implements IMenu {
 
     private void listAllTasks() {
         List<Task> allTasks = TASK_SERVICE.getAllTasks();
-        if (!allTasks.isEmpty()) {
-            allTasks.forEach(System.out::println);
-        } else {
+        if (allTasks.isEmpty()) {
             System.out.println("There are no registered tasks!");
+        } else {
+            allTasks.forEach(System.out::println);
         }
     }
 
@@ -126,6 +153,20 @@ public class AdminTaskMenu implements IMenu {
         } else {
             System.out.println("Project " + id + " has no tasks. Try a different project!");
         }
+    }
+
+    private void updateTaskDescription(Scanner scanner) {
+        listAllTasks();
+        scanner.nextLine();
+        System.out.print("Choose task from the above list to update it's description, or type 'cancel' to exit: ");
+        final String userInput = scanner.nextLine();
+        if (userInput.toLowerCase().equals(CANCEL_OPERATION)) {
+            displayMenu(scanner);
+        }
+        final int taskId = Integer.parseInt(userInput);
+        System.out.print("input new description: ");
+        final String newDescription = scanner.nextLine();
+        TASK_SERVICE.updateTaskDescription(newDescription, taskId);
     }
 
     private void deleteTask(Scanner scanner) {

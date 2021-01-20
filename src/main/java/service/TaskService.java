@@ -2,6 +2,7 @@ package service;
 
 import exceptions.technical.DatabaseConnectionException;
 import models.Task;
+import models.TaskCategory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,10 +14,11 @@ import static repo.TaskRepository.TASK_REPOSITORY;
 public enum TaskService {
     TASK_SERVICE;
 
-    public void createTask(String taskTitle, String taskDescription, int projectID) {
+    public void createTask(String taskTitle, String taskDescription, TaskCategory taskCategory, int projectID) {
         Task task = Task.builder()
                 .title(taskTitle)
                 .description(taskDescription)
+                .category(taskCategory)
                 .projectId(projectID)
                 .build();
         try (Connection connection = DATA_SOURCE.getConnection()) {
@@ -67,7 +69,6 @@ public enum TaskService {
         }
     }
 
-
     public List<Task> getTasksByProjectId(int id) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             return TASK_REPOSITORY.getTasksByProjectId(connection, id);
@@ -76,9 +77,25 @@ public enum TaskService {
         }
     }
 
+    public List<Task> gelAllInReviewTasks() {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            return TASK_REPOSITORY.getAllInReviewTasks(connection);
+        } catch (SQLException exception) {
+            throw new DatabaseConnectionException();
+        }
+    }
+
     public void updateTimeWorkedOnTask(int taskId, int hours) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             TASK_REPOSITORY.updateTimeWorkedOnTask(connection, taskId, hours);
+        } catch (SQLException exception) {
+            throw new DatabaseConnectionException();
+        }
+    }
+
+    public void updateTaskDescription(String taskDescription, int taskId) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            TASK_REPOSITORY.updateTaskDescription(connection, taskDescription, taskId);
         } catch (SQLException exception) {
             throw new DatabaseConnectionException();
         }

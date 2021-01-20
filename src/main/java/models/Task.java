@@ -11,7 +11,8 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    private String status;
+    private TaskCategory category;
+    private TaskStatus status;
     private int userId;
     private int projectId;
     private int workedHours;
@@ -21,6 +22,7 @@ public class Task {
         return "Task no. " + id
                 + ("\ntitle: " + title).indent(3)
                 + ("description: " + description).indent(3)
+                + ("category: " + category).indent(3)
                 + ("status: " + status).indent(3)
                 + ("assigned to: " + userId).indent(3)
                 + ("for project: " + projectId).indent(3)

@@ -19,6 +19,7 @@ public interface IMenu {
     int INT_11 = 11;
     int INT_12 = 12;
     String EXIT = "Closing Application...";
+    String CANCEL_OPERATION = "cancel";
 
 
     void displayMenu(Scanner scanner) throws SQLException;
